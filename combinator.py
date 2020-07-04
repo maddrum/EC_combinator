@@ -1,8 +1,9 @@
 import json
+from itertools import product
 
 g = ['G', ]
-v = ['V', 'S', 'Rez', ['Wx', 'Wy'], ['T_plus', 'T_minus'], 'T']
-
+v = ['V', 'S', 'Rez', ['Wx', 'Wy', ], ['T_plus', 'T_minus'], 'T']
+# max 2 no combination arrays in v!
 psi = {
     'V': 1,
     'S': 0.3,
@@ -12,6 +13,7 @@ psi = {
     'T_plus': 0.6,
     'T_minus': 0.6,
     'T': 1,
+    'W-x': .8,
 }
 gamma_f_g = 1.35
 gamma_f_v = 1.5
@@ -72,10 +74,23 @@ for base_combo in base_combos:
                 temp_combo += "+" + temp_gamma + single_item
                 print(temp_combo)
                 combos.append(temp_combo)
-    # add missed combos todo
-    if len(list_items) != 0:
-        print(f'aaa: {generated_combo_without_no_combination}')
-        print(list_items)
+    # add missed combos
+    if len(list_items) == 2:
+        combinated = list(product(list_items[0], list_items[1]))
+        for first, last in combinated:
+            temp_gamma_first = str(round((psi[first] * gamma_f_v), 2)) + '*'
+            temp_gamma_last = str(round((psi[last] * gamma_f_v), 2)) + '*'
+            temp_combo = generated_combo_without_no_combination + "+" + temp_gamma_first + first + \
+                         "+" + temp_gamma_last + last
+            print(temp_combo)
+            combos.append(temp_combo)
+
+    elif len(list_items) == 1:
+        for item in list_items[0]:
+            temp_gamma = str(round((psi[item] * gamma_f_v), 2)) + '*'
+            temp_combo = generated_combo_without_no_combination + "+" + temp_gamma + item
+            print(temp_combo)
+            combos.append(temp_combo)
 
 # generate final dict
 index = 1
