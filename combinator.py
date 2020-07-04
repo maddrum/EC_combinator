@@ -3,9 +3,16 @@ from itertools import product
 
 import xlsxwriter
 
+# input data
+# permanent loads
 g = ['G', ]
+
+# variable loads
 v = ['V', 'S', 'Rez', ['Wx', 'Wy', ], ['T_plus', 'T_minus'], 'T']
-# max 2 no combination arrays in v!
+# Load cases that can not combine with each other must be list in the main list
+# !!MAXIMUM 2 not combine inner arrays allowed!
+
+# combinations coefficients for load cases
 psi = {
     'V': 1,
     'S': 0.3,
@@ -17,8 +24,11 @@ psi = {
     'T': 1,
     'W-x': .8,
 }
+
 gamma_f_g = 1.35
 gamma_f_v = 1.5
+# end of input data
+
 base_combos = []
 result_combos = {}
 
@@ -76,7 +86,7 @@ for base_combo in base_combos:
                 temp_combo += "+" + temp_gamma + single_item
                 print(temp_combo)
                 combos.append(temp_combo)
-    # add missed combos
+    # add missing combos
     if len(list_items) == 2:
         combinated = list(product(list_items[0], list_items[1]))
         for first, last in combinated:
@@ -104,6 +114,8 @@ for item in combos:
         single_item_split = single_item.split('*')
         result_combos[formatted_item][single_item_split[1]] = float(single_item_split[0])
     index += 1
+
+# RESULTS
 # write json
 with open('combinator_result.json', 'w') as fp:
     json.dump(result_combos, fp)
@@ -120,8 +132,7 @@ for item in result_combos:
     for none_cols in range(6, 10):
         worksheet.write(row, none_cols, 'None')
     worksheet.write(row, 10, '420cc500-2e93-4eac-8805-d020a7124d2f')
-
-    # loadcases
+    # load cases
     for single_item in result_combos[item]:
         worksheet.write(row, 0, item)
         worksheet.write(row, 3, single_item)
