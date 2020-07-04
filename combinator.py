@@ -1,8 +1,8 @@
 import json
 
 g = ['G', ]
-v = ['V', 'S', 'Rez', 'Wx', 'Wy', 'T_plus', 'T_minus', 'T']
-not_combine = [['Wx', 'Wy'], ['T_plus', 'T_minus'],]
+v = ['V', 'S', 'Rez', ['Wx', 'Wy'], ['T_plus', 'T_minus'], 'T']
+
 psi = {
     'V': 1,
     'S': 0.3,
@@ -52,8 +52,9 @@ for base_combo in base_combos:
             current_pass += 1
     generated_combo = base_combo
     print(generated_combo)
+    list_items = []
+    generated_combo_without_no_combination = None
     while len(remaining) != 0:
-        list_items = []
         removed_remaining_item = remaining.pop(0)
         if not isinstance(removed_remaining_item, list):
             temp_gamma = str(round((psi[removed_remaining_item] * gamma_f_v), 2)) + '*'
@@ -61,6 +62,8 @@ for base_combo in base_combos:
             print(generated_combo)
             combos.append(generated_combo)
         else:
+            if generated_combo_without_no_combination is None:
+                generated_combo_without_no_combination = generated_combo
             for single_item in removed_remaining_item:
                 if not removed_remaining_item in list_items:
                     list_items.append(removed_remaining_item)
@@ -69,7 +72,10 @@ for base_combo in base_combos:
                 temp_combo += "+" + temp_gamma + single_item
                 print(temp_combo)
                 combos.append(temp_combo)
-            print(list_items)
+    # add missed combos todo
+    if len(list_items) != 0:
+        print(f'aaa: {generated_combo_without_no_combination}')
+        print(list_items)
 
 # generate final dict
 index = 1
