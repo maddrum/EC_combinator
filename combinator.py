@@ -1,6 +1,8 @@
 import json
 from itertools import product
 
+import xlsxwriter
+
 g = ['G', ]
 v = ['V', 'S', 'Rez', ['Wx', 'Wy', ], ['T_plus', 'T_minus'], 'T']
 # max 2 no combination arrays in v!
@@ -102,6 +104,27 @@ for item in combos:
         single_item_split = single_item.split('*')
         result_combos[formatted_item][single_item_split[1]] = float(single_item_split[0])
     index += 1
-print(result_combos)
+# write json
 with open('combinator_result.json', 'w') as fp:
     json.dump(result_combos, fp)
+# create excel
+workbook = xlsxwriter.Workbook('combinator_result.xlsx')
+worksheet = workbook.add_worksheet()
+row = 0
+for item in result_combos:
+    comb_name = item
+    # initial_row
+    worksheet.write(row, 1, 'Linear Add')
+    worksheet.write(row, 2, 'No')
+    worksheet.write(row, 4, '')
+    for none_cols in range(6, 10):
+        worksheet.write(row, none_cols, 'None')
+    worksheet.write(row, 10, '420cc500-2e93-4eac-8805-d020a7124d2f')
+
+    # loadcases
+    for single_item in result_combos[item]:
+        worksheet.write(row, 0, item)
+        worksheet.write(row, 3, single_item)
+        worksheet.write(row, 5, result_combos[item][single_item])
+        row += 1
+workbook.close()
