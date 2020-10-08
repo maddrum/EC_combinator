@@ -15,7 +15,7 @@ v = ['V', 'S', 'Rez', ['Wx', 'Wy', ], ['T_plus', 'T_minus'], 'T']
 # combinations coefficients for load cases
 psi = {
     'V': 1,
-    'S': 0.3,
+    'S': 0.5,
     'Rez': 1,
     'Wx': 0.6,
     'Wy': 0.6,
